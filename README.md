@@ -87,6 +87,6 @@ To run the  script "etl.py" as intended, download data from AWS S3 to EMR for ET
 Subsquently:
 - Open up a terminal and use the "scp" command to copy the "etl.py" and "dl.cfg" file onto to your AWS EMR cluster.
 - Install package boto3 if not installed already using the following command `pip install boto3 --user`.
-- Commit and the "etl.py" script by typing the following command in the termial `spark-commit --master yarn ./etl.py`.
+- Commit and run the "etl.py" script by typing the following command in the termial `spark-commit --master yarn ./etl.py`.
 <br/>
 After following the above commands the fact and dimension tables will be populated, and saved onto AWS s3, with the source data and ready for queries to be performed to extract the necessary data for analysis.
