@@ -63,6 +63,9 @@ songdataSchema = R([
 #-----------------------
 
 def create_spark_session():
+    """
+    Gets an existing or Creates a new spark session and returns this. 
+    """
     spark = SparkSession \
         .builder \
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
@@ -71,6 +74,12 @@ def create_spark_session():
 
 
 def getFilepaths(prefix, input_data):
+    """
+    - Takes in prefix and input_data variables.
+    - Determines from the input_data variable if filepaths are local or on 's3a://' servers .json.
+    - Returns either local or non-local failpaths.
+    """
+    
     filepaths=[]
     if 's3a://' in input_data:
         my_bucket = s3.Bucket('udacity-dend')
@@ -88,6 +97,15 @@ def getFilepaths(prefix, input_data):
     
     
 def process_song_data(spark, input_data, output_data):
+    """
+    - Takes spark session, input_data (source data) and output_data (where to be written to) paths.
+    - Sets up spark context and s3a settings.
+    - Calls the filepaths function and gets song data located at input_data path.
+    - Transforms song data into the "artist" and "songs_table".
+    - Writes both tables to location in the output_data variable in the .parquet format.
+    - Returns table to the main function.
+    """
+    
     sc = spark.sparkContext
     spark.sql("set spark.sql.parquet.compression.codec=gzip")
     hdpConf = sc._jsc.hadoopConfiguration()
@@ -151,6 +169,14 @@ def process_song_data(spark, input_data, output_data):
     return songs_table, artists_table
 
 def process_log_data(spark, input_data, output_data, songs_table, artists_table):
+    """
+    - Takes spark session, input_data (source data) and output_data (where to be written to) paths.
+    - Sets up spark context and s3a settings.
+    - Calls the filepaths function and gets log data located at input_data path.
+    - Transforms log data into the "songplays", "users" and times_table".
+    - Writes tables to location in the output_data variable in the .parquet format.
+    """
+    
     sc = spark.sparkContext
     spark.sql("set spark.sql.parquet.compression.codec=gzip")
     hdpConf = sc._jsc.hadoopConfiguration()
@@ -260,6 +286,11 @@ def process_log_data(spark, input_data, output_data, songs_table, artists_table)
     print('Loading/Writing .JSON log_data - Completed, Time Taken: {}'.format(total))
 
 def main():
+    """
+    - Obtains spark session.
+    - Obtains input_data and output_data paths from "dl.cfg" file.
+    - Passes three variables to the "process_song_data" and "process_log_data" functions.
+    """
     spark = create_spark_session()
     
     
